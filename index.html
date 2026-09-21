@@ -1,0 +1,497 @@
+<!doctype html>
+<html lang="it">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Raul Osifo · Automazioni e integrazioni per l’e-commerce</title>
+  <meta name="description" content="Portfolio di Raul Osifo, Automation &amp; Integrations Specialist a Torino. Caso studio: l’automazione di Spirit Ink, dall’ordine pagato su Shopify alla spedizione.">
+  <link rel="canonical" href="https://geekeronline.github.io/portfolio/">
+  <link rel="alternate" hreflang="it" href="https://geekeronline.github.io/portfolio/?lang=it">
+  <link rel="alternate" hreflang="en" href="https://geekeronline.github.io/portfolio/?lang=en">
+  <link rel="alternate" hreflang="x-default" href="https://geekeronline.github.io/portfolio/">
+
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://geekeronline.github.io/portfolio/">
+  <meta property="og:title" content="Raul Osifo · Automation &amp; Integrations Specialist">
+  <meta property="og:description" content="Automations that take an order from checkout to the customer’s door. Case study: Spirit Ink.">
+  <meta property="og:image" content="https://geekeronline.github.io/portfolio/assets/img/og-image.jpg">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta property="og:locale" content="it_IT">
+  <meta property="og:locale:alternate" content="en_GB">
+  <meta name="twitter:card" content="summary_large_image">
+
+  <meta name="theme-color" content="#f4f1ea" media="(prefers-color-scheme: light)">
+  <meta name="theme-color" content="#141615" media="(prefers-color-scheme: dark)">
+  <meta name="color-scheme" content="light dark">
+  <link rel="icon" href="favicon.svg" type="image/svg+xml">
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300..600;1,9..144,300..600&family=Newsreader:ital,opsz,wght@0,6..72,400..600;1,6..72,400..600&family=Instrument+Sans:wght@400..600&display=swap">
+  <link rel="stylesheet" href="styles.css">
+
+  <script>
+    // Pick the language before first paint: ?lang= wins, then the saved choice, then the browser.
+    (function () {
+      var d = document.documentElement, l = null;
+      try { l = new URLSearchParams(location.search).get('lang'); } catch (e) {}
+      if (l !== 'it' && l !== 'en') { try { l = localStorage.getItem('lang'); } catch (e) {} }
+      if (l !== 'it' && l !== 'en') { l = /^it\b/i.test(navigator.language || '') ? 'it' : 'en'; }
+      d.lang = l;
+    })();
+  </script>
+
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "Person",
+    "name": "Raul Osifo",
+    "jobTitle": "Automation & Integrations Specialist",
+    "url": "https://geekeronline.github.io/portfolio/",
+    "email": "mailto:osiforaul2003@gmail.com",
+    "image": "https://geekeronline.github.io/portfolio/assets/img/raul-osifo-800.jpg",
+    "address": { "@type": "PostalAddress", "addressLocality": "Torino", "addressCountry": "IT" },
+    "knowsLanguage": ["it", "en"],
+    "sameAs": ["https://github.com/Geekeronline"]
+  }
+  </script>
+</head>
+<body>
+  <a class="skip-link" href="#main"><span lang="it">Vai al contenuto</span><span lang="en">Skip to content</span></a>
+
+  <header class="masthead" id="masthead">
+    <div class="masthead__inner wrap">
+      <a class="wordmark" href="#top">Raul Osifo</a>
+
+      <nav class="masthead__nav" data-aria-it="Sezioni" data-aria-en="Sections" aria-label="Sezioni">
+        <ul>
+          <li><a href="#cosa-faccio"><span lang="it">Cosa faccio</span><span lang="en">What I do</span></a></li>
+          <li><a href="#lavoro"><span lang="it">Lavoro</span><span lang="en">Work</span></a></li>
+          <li><a href="#metodo"><span lang="it">Metodo</span><span lang="en">Approach</span></a></li>
+          <li><a href="#profilo"><span lang="it">Profilo</span><span lang="en">About</span></a></li>
+          <li><a href="#contatti"><span lang="it">Contatti</span><span lang="en">Contact</span></a></li>
+        </ul>
+      </nav>
+
+      <div class="lang-switch" role="group" aria-label="Lingua / Language">
+        <button type="button" data-set-lang="it" aria-pressed="true"><abbr title="Italiano">IT</abbr></button>
+        <span class="lang-switch__sep" aria-hidden="true">/</span>
+        <button type="button" data-set-lang="en" aria-pressed="false"><abbr title="English">EN</abbr></button>
+      </div>
+    </div>
+  </header>
+
+  <main id="main">
+
+    <!-- Apertura -->
+    <section class="hero wrap" id="top" aria-labelledby="hero-title">
+      <p class="kicker hero__kicker">
+        <span lang="it">Automation &amp; Integrations Specialist · Torino</span>
+        <span lang="en">Automation &amp; Integrations Specialist · Turin</span>
+      </p>
+
+      <h1 class="hero__title" id="hero-title">
+        <span lang="it">Costruisco le automazioni che portano un ordine dal checkout alla porta di casa.</span>
+        <span lang="en">I build the automations that take an order from checkout to the customer’s door.</span>
+      </h1>
+
+      <figure class="hero__portrait">
+        <img
+          src="assets/img/raul-osifo-800.jpg"
+          srcset="assets/img/raul-osifo-480.jpg 480w, assets/img/raul-osifo-800.jpg 800w"
+          sizes="(min-width: 960px) 34vw, (min-width: 600px) 60vw, 88vw"
+          width="800" height="1000"
+          fetchpriority="high"
+          data-alt-it="Ritratto di Raul Osifo in giacca scura e camicia bianca, a braccia conserte, davanti a un muro chiaro."
+          data-alt-en="Portrait of Raul Osifo in a dark blazer and white shirt, arms crossed, against a pale wall."
+          alt="Ritratto di Raul Osifo in giacca scura e camicia bianca, a braccia conserte, davanti a un muro chiaro.">
+        <figcaption><span lang="it">Raul Osifo, Torino</span><span lang="en">Raul Osifo, Turin</span></figcaption>
+      </figure>
+
+      <div class="hero__dek">
+        <p lang="it">Lavoro con Shopify, Make, Airtable e le API dei fornitori. Passo gran parte del tempo sui casi che il cliente non vede: un codice fornitore non ancora confermato, una richiesta andata in timeout quando l’ordine potrebbe esistere già.</p>
+        <p lang="en">I work with Shopify, Make, Airtable and supplier APIs. Most of my time goes into the cases customers don’t see: a supplier code that hasn’t been confirmed, or a request that timed out when the order might already exist.</p>
+      </div>
+
+      <p class="hero__actions">
+        <a class="button" href="#lavoro"><span lang="it">Leggi il caso Spirit Ink</span><span lang="en">Read the Spirit Ink case</span></a>
+        <a class="text-link" href="mailto:osiforaul2003@gmail.com"><span lang="it">Scrivimi</span><span lang="en">Email me</span></a>
+      </p>
+    </section>
+
+    <!-- Cosa faccio -->
+    <section class="section wrap" id="cosa-faccio" aria-labelledby="cosa-faccio-title">
+      <header class="section__head">
+        <p class="section__label"><span lang="it">Cosa faccio</span><span lang="en">What I do</span></p>
+        <h2 class="section__title" id="cosa-faccio-title">
+          <span lang="it">Lavoro nel punto in cui un negozio online incontra la produzione.</span>
+          <span lang="en">I work where an online store meets production.</span>
+        </h2>
+      </header>
+
+      <ul class="capabilities">
+        <li>
+          <h3><span lang="it">Automazioni end-to-end</span><span lang="en">End-to-end automation</span></h3>
+          <p lang="it">Dalla richiesta del cliente all’evasione dell’ordine, in un unico flusso che collega negozio, database, servizi cloud e fornitori.</p>
+          <p lang="en">From the customer’s request to the fulfilled order, in one flow that connects the shop, the database, cloud services and suppliers.</p>
+        </li>
+        <li>
+          <h3><span lang="it">Prodotti gestiti via API</span><span lang="en">Products managed through the API</span></h3>
+          <p lang="it">Prodotti e varianti creati e riconciliati con Shopify Admin GraphQL. Nomi, colori e taglie restano nel catalogo, fuori dalla logica dei workflow.</p>
+          <p lang="en">Products and variants created and reconciled with Shopify Admin GraphQL. Names, colours and sizes live in the catalogue, outside the workflow logic.</p>
+        </li>
+        <li>
+          <h3><span lang="it">Troubleshooting tra sistemi</span><span lang="en">Cross-system troubleshooting</span></h3>
+          <p lang="it">Errori che si vedono in un punto e nascono in un altro. Li cerco tra browser, Make, Airtable, Shopify e API dei fornitori, e li correggo senza ricostruire ciò che già funziona.</p>
+          <p lang="en">Errors that show up in one place and start in another. I trace them across the browser, Make, Airtable, Shopify and supplier APIs, and fix them without rebuilding what already works.</p>
+        </li>
+        <li>
+          <h3><span lang="it">Ordini che non partono due volte</span><span lang="en">Orders that don’t go out twice</span></h3>
+          <p lang="it">Stato salvato tra un passaggio e l’altro, invii che si possono ripetere senza creare doppioni, blocchi quando manca un dato e revisione manuale per i casi dubbi.</p>
+          <p lang="en">State saved between steps, dispatch that can be repeated without creating duplicates, holds when data is missing, and manual review for uncertain cases.</p>
+        </li>
+      </ul>
+    </section>
+
+    <!-- Caso studio -->
+    <article class="case" id="lavoro" aria-labelledby="case-title">
+      <header class="case__head wrap">
+        <div class="case__rule">
+        <p class="section__label"><span lang="it">Caso studio · 2026</span><span lang="en">Case study · 2026</span></p>
+        <h2 class="case__title" id="case-title">Spirit Ink</h2>
+        <div class="case__dek">
+          <p lang="it">Spirit Ink crea negozi online di abbigliamento personalizzato per scuole e associazioni di genitori nel Regno Unito, e ogni vendita raccoglie fondi per la scuola. Ho costruito l’automazione che prende un ordine pagato, prepara i file di stampa, lo invia al fornitore giusto e riporta il tracking su Shopify.</p>
+          <p lang="en">Spirit Ink builds custom clothing shops for schools and parent associations in the UK, and every sale raises money for the school. I built the automation that takes a paid order, prepares the print files, sends it to the right supplier and brings the tracking back into Shopify.</p>
+        </div>
+        </div>
+      </header>
+
+      <figure class="case__cover wrap">
+        <img
+          src="assets/img/spirit-ink-banner-1600.webp"
+          srcset="assets/img/spirit-ink-banner-900.webp 900w, assets/img/spirit-ink-banner-1600.webp 1600w"
+          sizes="(min-width: 1280px) 1200px, 94vw"
+          width="1600" height="900" loading="lazy" decoding="async"
+          data-alt-it="Logo di Spirit Ink, una macchia d’inchiostro bianca su fondo verde petrolio."
+          data-alt-en="The Spirit Ink logo, a white ink splash on a teal background."
+          alt="Logo di Spirit Ink, una macchia d’inchiostro bianca su fondo verde petrolio.">
+      </figure>
+
+      <div class="case__layout wrap">
+        <aside class="factbox" aria-labelledby="factbox-title">
+          <h3 class="factbox__title" id="factbox-title"><span lang="it">In breve</span><span lang="en">At a glance</span></h3>
+          <dl>
+            <div>
+              <dt><span lang="it">Ruolo</span><span lang="en">Role</span></dt>
+              <dd><span lang="it">Automation &amp; Integrations Specialist, da remoto</span><span lang="en">Automation &amp; Integrations Specialist, remote</span></dd>
+            </div>
+            <div>
+              <dt><span lang="it">Periodo</span><span lang="en">Timeline</span></dt>
+              <dd><span lang="it">2026. Lo scope concordato è stato completato il 15 settembre 2026.</span><span lang="en">2026. The agreed scope was completed on 15 September 2026.</span></dd>
+            </div>
+            <div>
+              <dt><span lang="it">Strumenti</span><span lang="en">Tools</span></dt>
+              <dd><span lang="it">Shopify, Make, Airtable, Google Cloud Run, Cloudinary, GitHub e le API di due fornitori di stampa</span><span lang="en">Shopify, Make, Airtable, Google Cloud Run, Cloudinary, GitHub and two print suppliers’ APIs</span></dd>
+            </div>
+            <div>
+              <dt>Link</dt>
+              <dd>
+                <a href="https://spirit-ink.co.uk/" rel="noopener">spirit-ink.co.uk</a><br>
+                <a href="https://github.com/Geekeronline/spirit-ink-case-study/tree/italian"
+                   data-href-it="https://github.com/Geekeronline/spirit-ink-case-study/tree/italian"
+                   data-href-en="https://github.com/Geekeronline/spirit-ink-case-study"
+                   rel="noopener"><span lang="it">Case study completo su GitHub</span><span lang="en">Full case study on GitHub</span></a>
+              </dd>
+            </div>
+          </dl>
+        </aside>
+
+        <div class="case__body prose">
+          <h3><span lang="it">Ogni scuola in più voleva dire più lavoro a mano</span><span lang="en">Every new school meant more work by hand</span></h3>
+          <p class="dropcap" lang="it">Senza automazione bisognava creare la grafica, raccogliere i file, configurare i prodotti, preparare i file di stampa, scegliere le varianti giuste del fornitore, inviare gli ordini e aggiornare Shopify a ogni spedizione. Il carico cresceva con ogni scuola e con ogni nuova opzione di prodotto.</p>
+          <p class="dropcap" lang="en">Without automation, someone had to create the artwork, collect the files, set up the products, prepare the print files, pick the right supplier variants, send the orders and update Shopify for every shipment. The workload grew with every school and every new product option.</p>
+          <p lang="it">L’obiettivo era automatizzare il più possibile, ma fermare il flusso ogni volta che mancava un dato importante del fornitore o un’informazione non era abbastanza certa.</p>
+          <p lang="en">The goal was to automate as much as possible, but to stop the flow whenever important supplier data was missing or the information wasn’t certain enough.</p>
+
+          <h3><span lang="it">Io mi sono occupato dei collegamenti e dei controlli</span><span lang="en">I was responsible for the connections and the checks</span></h3>
+          <p lang="it">Ho deciso come i servizi dovevano comunicare e dove doveva stare ogni tipo di dato, e ho seguito tutte le integrazioni, comprese quelle con le API dei due fornitori di stampa.</p>
+          <p lang="en">I decided how the services should talk to each other and where each kind of data should live, and I owned all the integrations, including the two print suppliers’ APIs.</p>
+          <p lang="it">Nei punti più delicati ho aggiunto controlli contro gli ordini duplicati, i prodotti mandati al fornitore sbagliato e le pubblicazioni visibili ai clienti prima dell’approvazione. Alla fine ho scritto un handoff che permette a un’altra persona di capire il sistema live senza ripercorrere vecchi test e note di debug.</p>
+          <p lang="en">At the riskiest points I added checks against duplicate orders, products routed to the wrong supplier and pages going live before anyone approved them. At the end I wrote a handoff that lets someone else understand the live system without digging through old tests and debugging notes.</p>
+        </div>
+      </div>
+
+      <blockquote class="pullquote wrap">
+        <p lang="it">Un identificativo apparentemente plausibile può comunque puntare al prodotto sbagliato.</p>
+        <p lang="en">An identifier that looks plausible can still point to the wrong product.</p>
+      </blockquote>
+
+      <figure class="flow wrap" aria-labelledby="flow-title">
+        <div class="flow__panel">
+        <h3 class="flow__title" id="flow-title"><span lang="it">Il percorso di un ordine pagato</span><span lang="en">The route of a paid order</span></h3>
+        <ol class="flow__steps">
+          <li>
+            <h4><span lang="it">Prodotto</span><span lang="en">Product</span></h4>
+            <p lang="it">Il design diventa un prodotto Shopify, collegato al codice esatto del fornitore.</p>
+            <p lang="en">The design becomes a Shopify product, linked to the supplier’s exact code.</p>
+          </li>
+          <li>
+            <h4><span lang="it">Ordine</span><span lang="en">Order</span></h4>
+            <p lang="it">Quando il cliente paga, le righe dell’ordine entrano nel flusso operativo.</p>
+            <p lang="en">Once the customer pays, the order lines enter the operational flow.</p>
+          </li>
+          <li>
+            <h4><span lang="it">Stampa</span><span lang="en">Print</span></h4>
+            <p lang="it">Si prepara il pacchetto di produzione: artwork, posizione e dimensioni di stampa.</p>
+            <p lang="en">The production package is built: artwork, print position and size.</p>
+          </li>
+          <li>
+            <h4><span lang="it">Invio</span><span lang="en">Dispatch</span></h4>
+            <p lang="it">Ogni riga parte verso il fornitore giusto, solo dopo che i controlli sono passati.</p>
+            <p lang="en">Each line goes to the right supplier, and only after the checks have passed.</p>
+          </li>
+          <li>
+            <h4>Tracking</h4>
+            <p lang="it">Il tracking del fornitore torna su Shopify e l’ordine risulta evaso.</p>
+            <p lang="en">The supplier’s tracking comes back to Shopify and the order is marked as fulfilled.</p>
+          </li>
+        </ol>
+        </div>
+        <figcaption>
+          <span lang="it">Ogni fase è uno scenario Make separato; tra un passaggio e l’altro lo stato dell’ordine resta salvato in Airtable.</span>
+          <span lang="en">Each stage is a separate Make scenario, and the order’s state stays saved in Airtable between steps.</span>
+        </figcaption>
+      </figure>
+
+      <div class="wrap school-stores">
+        <div class="prose indent">
+        <p lang="it">Le scuole hanno anche un flusso tutto loro: scelgono i prodotti, salvano la gamma come bozza e la mandano in revisione dal proprio account. Ogni scuola può dare ai prodotti nomi e descrizioni propri senza toccare il prodotto Shopify che condivide con le altre.</p>
+        <p lang="en">Schools also get a flow of their own. They pick products, save the range as a draft and send it for review from their account, and each school can give products its own names and descriptions without touching the Shopify product it shares with the others.</p>
+        </div>
+      </div>
+
+      <figure class="diptych wrap">
+        <div class="diptych__panel">
+          <img
+            src="assets/img/hoodie-front-720.webp"
+            srcset="assets/img/hoodie-front-420.webp 420w, assets/img/hoodie-front-720.webp 720w"
+            sizes="(min-width: 1280px) 560px, 45vw"
+            width="720" height="844" loading="lazy" decoding="async"
+            data-alt-it="Felpa color crema vista di fronte, con la scritta Your school here in blu e giallo sul petto."
+            data-alt-en="A cream hoodie seen from the front, with Your school here printed in navy and yellow across the chest."
+            alt="Felpa color crema vista di fronte, con la scritta Your school here in blu e giallo sul petto.">
+          <img
+            src="assets/img/hoodie-back-720.webp"
+            srcset="assets/img/hoodie-back-420.webp 420w, assets/img/hoodie-back-720.webp 720w"
+            sizes="(min-width: 1280px) 560px, 45vw"
+            width="720" height="844" loading="lazy" decoding="async"
+            data-alt-it="La stessa felpa vista da dietro, con Your school here ripetuto più volte in grigio sulla schiena."
+            data-alt-en="The same hoodie seen from the back, with Your school here repeated in grey across the back."
+            alt="La stessa felpa vista da dietro, con Your school here ripetuto più volte in grigio sulla schiena.">
+        </div>
+        <figcaption>
+          <span lang="it">Fronte e retro sono due posizionamenti separati, ognuno con artwork, geometria, scala e template propri. Nelle foto, due modelli generici del catalogo Spirit Ink.</span>
+          <span lang="en">Front and back are two separate placements, each with its own artwork, geometry, scale and template. Shown here with two generic Spirit Ink templates.</span>
+        </figcaption>
+      </figure>
+
+      <section class="stats wrap" aria-labelledby="stats-title">
+        <h3 class="visually-hidden" id="stats-title"><span lang="it">Il progetto in numeri</span><span lang="en">The project in numbers</span></h3>
+        <div class="stats__row">
+          <dl class="stats__grid">
+            <div><dt><span lang="it">famiglie di prodotto</span><span lang="en">product families</span></dt><dd>9</dd></div>
+            <div><dt><span lang="it">stampabili su fronte, retro o entrambi</span><span lang="en">printable front, back or both</span></dt><dd>7</dd></div>
+            <div><dt><span lang="it">fornitori di stampa collegati</span><span lang="en">print suppliers connected</span></dt><dd>2</dd></div>
+          </dl>
+          <p class="stats__note" lang="it">Il percorso del fornitore principale ha già portato un ordine reale e pagato dal checkout Shopify alla consegna, con tracking ed evasione. Il secondo fornitore è attivo per i prodotti con codici verificati.</p>
+          <p class="stats__note" lang="en">The main supplier’s route has already taken a real, paid order from Shopify checkout to delivery, with tracking and fulfilment. The second supplier is live for products with verified codes.</p>
+        </div>
+      </section>
+
+      <section class="decisions wrap" aria-labelledby="decisions-title">
+        <h3 class="block-title" id="decisions-title"><span lang="it">Tre decisioni, e cosa sono costate</span><span lang="en">Three decisions, and what they cost</span></h3>
+        <ol class="decisions__list">
+          <li>
+            <h4><span lang="it">I codici dei fornitori non si indovinano</span><span lang="en">Supplier codes are never guessed</span></h4>
+            <p lang="it">Gli SKU interni sono leggibili e i codici dei fornitori spesso si somigliano, quindi la tentazione di dedurre un valore mancante c’è. Il sistema usa solo identificativi confermati dal fornitore: se ne manca uno, la riga d’ordine resta ferma e il blocco registra cosa serve.</p>
+            <p lang="en">Internal SKUs are readable and supplier codes often look alike, so it’s tempting to infer a missing value. The system only uses identifiers the supplier has confirmed. If one is missing, the order line stays on hold and the hold records what’s needed.</p>
+            <p class="tradeoff"><span class="tradeoff__label"><span lang="it">Compromesso</span><span lang="en">Trade-off</span></span> <span lang="it">un’opzione senza codice confermato non si vende finché qualcuno non la verifica.</span><span lang="en">an option without a confirmed code can’t be sold until someone verifies it.</span></p>
+          </li>
+          <li>
+            <h4><span lang="it">Fasi separate invece di un unico workflow</span><span lang="en">Separate stages instead of one long workflow</span></h4>
+            <p lang="it">Ogni fase va storta in un modo diverso. Se la richiesta arriva al fornitore ma la risposta non torna, l’ordine potrebbe esistere già, quindi quel caso passa da una revisione manuale prima di qualsiasi nuovo tentativo. Un secondo invio potrebbe creare un doppione e far pagare il cliente due volte.</p>
+            <p lang="en">Each stage goes wrong in its own way. If a request reaches the supplier but the response never comes back, the order may already exist, so that case goes to manual review before any retry. Sending it again could create a duplicate and charge the customer twice.</p>
+            <p class="tradeoff"><span class="tradeoff__label"><span lang="it">Compromesso</span><span lang="en">Trade-off</span></span> <span lang="it">più workflow da mantenere, e lo stato deve sopravvivere tra uno e l’altro.</span><span lang="en">more workflows to maintain, and state has to persist between them.</span></p>
+          </li>
+          <li>
+            <h4><span lang="it">Una persona approva prima della pubblicazione</span><span lang="en">A person approves before anything is published</span></h4>
+            <p lang="it">L’automazione prepara prodotti e store scolastici fino alla revisione. La pagina di revisione mostra l’artwork renderizzato e la presentazione lato cliente, così chi approva vede quello che vedranno i clienti.</p>
+            <p lang="en">The automation prepares products and school stores up to the review stage. The review page shows the rendered artwork and the customer-facing layout, so the approver sees what customers will see.</p>
+            <p class="tradeoff"><span class="tradeoff__label"><span lang="it">Compromesso</span><span lang="en">Trade-off</span></span> <span lang="it">nel processo resta un breve passaggio manuale.</span><span lang="en">the process keeps one short manual step.</span></p>
+          </li>
+        </ol>
+      </section>
+
+      <section class="fieldnotes wrap" aria-labelledby="fieldnotes-title">
+        <h3 class="block-title" id="fieldnotes-title"><span lang="it">La causa stava quasi sempre al confine tra due sistemi</span><span lang="en">The cause was usually at the boundary between two systems</span></h3>
+        <div class="fieldnotes__grid">
+          <div class="note">
+            <h4><span lang="it">Le anteprime sparivano solo passando da Shopify</span><span lang="en">Previews vanished only when the request went through Shopify</span></h4>
+            <dl>
+              <dt><span lang="it">Sintomo</span><span lang="en">Symptom</span></dt>
+              <dd><span lang="it">Nella revisione degli School Store le immagini dei prodotti scomparivano, mentre la stessa immagine richiamata direttamente si vedeva.</span><span lang="en">In the School Store review flow, product images disappeared, while the same image loaded fine when requested directly.</span></dd>
+              <dt><span lang="it">Causa</span><span lang="en">Cause</span></dt>
+              <dd><span lang="it">Shopify aggiungeva alla richiesta parametri di trasporto che l’endpoint delle immagini rifiutava.</span><span lang="en">Shopify added transport parameters to the request, and the image endpoint rejected them.</span></dd>
+              <dt><span lang="it">Soluzione</span><span lang="en">Fix</span></dt>
+              <dd><span lang="it">Il proxy ora valida la richiesta in ingresso e inoltra solo i parametri necessari, con gli stessi controlli di prima.</span><span lang="en">The proxy now validates the incoming request and forwards only the parameters it needs, with the same checks as before.</span></dd>
+            </dl>
+          </div>
+          <div class="note">
+            <h4><span lang="it">Il secondo passaggio leggeva una versione vecchia del record</span><span lang="en">The second step was reading an old copy of the record</span></h4>
+            <dl>
+              <dt><span lang="it">Sintomo</span><span lang="en">Symptom</span></dt>
+              <dd><span lang="it">Un record doveva passare dal mockup alla creazione del prodotto. La prima fase finiva e il database mostrava lo stato nuovo, ma la seconda non partiva.</span><span lang="en">A record had to move from mockup to store product. The first stage finished and the database showed the new state, but the second stage never started.</span></dd>
+              <dt><span lang="it">Causa</span><span lang="en">Cause</span></dt>
+              <dd><span lang="it">Filtro e scrittura erano corretti. Il router di Make valutava entrambe le route sulla versione del record letta all’inizio dell’esecuzione.</span><span lang="en">The filter and the write were both correct. Make’s router evaluated both routes against the version of the record read at the start of the run.</span></dd>
+              <dt><span lang="it">Soluzione</span><span lang="en">Fix</span></dt>
+              <dd><span lang="it">Ho diviso le due fasi in esecuzioni diverse, usando come confine il passaggio di approvazione che esisteva già.</span><span lang="en">I split the two stages into separate runs, using the existing approval step as the boundary.</span></dd>
+            </dl>
+          </div>
+        </div>
+      </section>
+
+      <div class="wrap">
+      <p class="case__links">
+        <a class="text-link" rel="noopener"
+           href="https://github.com/Geekeronline/spirit-ink-case-study/tree/italian"
+           data-href-it="https://github.com/Geekeronline/spirit-ink-case-study/tree/italian"
+           data-href-en="https://github.com/Geekeronline/spirit-ink-case-study"><span lang="it">Leggi il case study completo su GitHub</span><span lang="en">Read the full case study on GitHub</span></a>
+        <a class="text-link" rel="noopener" href="https://spirit-ink.co.uk/"><span lang="it">Visita spirit-ink.co.uk</span><span lang="en">Visit spirit-ink.co.uk</span></a>
+      </p>
+      </div>
+    </article>
+
+    <!-- Metodo -->
+    <section class="section wrap" id="metodo" aria-labelledby="metodo-title">
+      <header class="section__head">
+        <p class="section__label"><span lang="it">Metodo</span><span lang="en">Approach</span></p>
+        <h2 class="section__title" id="metodo-title">
+          <span lang="it">Prima di cambiare un sistema live, lo leggo.</span>
+          <span lang="en">Before I change a live system, I read it.</span>
+        </h2>
+      </header>
+
+      <ul class="principles">
+        <li>
+          <h3><span lang="it">Modifiche piccole e reversibili</span><span lang="en">Small, reversible changes</span></h3>
+          <p lang="it">Controllo lo stato attuale di uno scenario e intervengo solo sui moduli coinvolti. Un vecchio export resta materiale di riferimento: reimportarlo potrebbe cancellare modifiche live più recenti.</p>
+          <p lang="en">I check a scenario’s current state and touch only the modules involved. An old export stays as reference material, since re-importing it could overwrite newer live changes.</p>
+        </li>
+        <li>
+          <h3><span lang="it">Gli stati tecnici diventano prossimi passi</span><span lang="en">Technical states become next steps</span></h3>
+          <p lang="it">A un cliente non tecnico non scrivo «fail-closed pending authoritative data». Scrivo che l’opzione non si può ancora vendere perché il fornitore non ha confermato un codice, e indico quale informazione serve.</p>
+          <p lang="en">I don’t tell a non-technical client that an option is “fail-closed pending authoritative data”. I say it can’t be sold yet because the supplier hasn’t confirmed a code, and name the information we need.</p>
+        </li>
+        <li>
+          <h3><span lang="it">Dire a che punto siamo, con precisione</span><span lang="en">Saying exactly where things stand</span></h3>
+          <p lang="it">Costruito, distribuito, testato, dimostrato con un ordine reale: sono quattro cose diverse, e quando comunico l’avanzamento le tengo separate.</p>
+          <p lang="en">Built, deployed, tested and proven with a real order are four different things, and I keep them separate when I report progress.</p>
+        </li>
+        <li>
+          <h3><span lang="it">Uso agenti AI, e la verifica resta mia</span><span lang="en">I use AI agents, and the checking stays with me</span></h3>
+          <p lang="it">Durante l’implementazione ho usato molto gli agenti AI per il codice. Requisiti, architettura, vincoli e accettazione finale sono rimasti a me, e ogni modifica generata è stata verificata sul sistema reale.</p>
+          <p lang="en">I relied heavily on AI coding agents during implementation. Requirements, architecture, the agents’ constraints and final acceptance stayed with me, and every generated change was checked against the real system.</p>
+        </li>
+      </ul>
+    </section>
+
+    <!-- Profilo -->
+    <section class="section wrap" id="profilo" aria-labelledby="profilo-title">
+      <header class="section__head">
+        <p class="section__label"><span lang="it">Profilo</span><span lang="en">About</span></p>
+        <h2 class="section__title" id="profilo-title">
+          <span lang="it">Ho iniziato lavorando con i clienti, poi sono passato ai sistemi che li servono.</span>
+          <span lang="en">I started out working with customers, then moved to the systems that serve them.</span>
+        </h2>
+      </header>
+
+      <div class="about">
+        <div class="about__bio prose">
+          <p lang="it">Dal 2023 al 2024 ho lavorato in SM Finglobal Consulting, aiutando aziende a trovare finanziamenti pubblici ed europei adatti a loro e seguendole dal primo contatto fino a preventivi, contratti e firma digitale. Poi sono stato Specialist all’Apple Store Le Gru, tra consulenza su prodotti e servizi e primo supporto tecnico.</p>
+          <p lang="en">From 2023 to 2024 I worked at SM Finglobal Consulting, helping businesses find public and EU funding that suited them and following them from the first call through quotes, contracts and digital signature. Then I was a Specialist at the Apple Store in Le Gru, giving product and service advice and first-line technical support.</p>
+          <p lang="it">Nel 2026 sono passato ai sistemi: ho progettato e costruito da remoto l’automazione di Spirit Ink. Intanto studio Sustainable Design for the Food System al Politecnico di Torino, la città in cui vivo.</p>
+          <p lang="en">In 2026 I moved to systems work: I designed and built Spirit Ink’s automation, working remotely. Alongside that I’m a degree candidate in Sustainable Design for the Food System at Politecnico di Torino, in Turin, where I live.</p>
+          <p lang="it">Dal lavoro con i clienti mi porto la raccolta dei requisiti e l’abitudine di spiegare le cose senza gergo.</p>
+          <p lang="en">From working with customers I kept two habits: gathering requirements properly, and explaining things without jargon.</p>
+        </div>
+
+        <div class="about__side">
+          <h3 class="side-title"><span lang="it">Percorso</span><span lang="en">Experience</span></h3>
+          <ol class="timeline">
+            <li>
+              <p class="timeline__when"><span lang="it">2026 – oggi</span><span lang="en">2026 – present</span></p>
+              <p class="timeline__org">Spirit Ink</p>
+              <p class="timeline__role"><span lang="it">Automation &amp; Integrations Specialist · da remoto</span><span lang="en">Automation &amp; Integrations Specialist · remote</span></p>
+            </li>
+            <li>
+              <p class="timeline__when"><span lang="it">lug 2025 – gen 2026</span><span lang="en">Jul 2025 – Jan 2026</span></p>
+              <p class="timeline__org">Apple Store Le Gru</p>
+              <p class="timeline__role"><span lang="it">Specialist · Torino</span><span lang="en">Specialist · Turin</span></p>
+            </li>
+            <li>
+              <p class="timeline__when"><span lang="it">ott 2023 – set 2024</span><span lang="en">Oct 2023 – Sep 2024</span></p>
+              <p class="timeline__org">SM Finglobal Consulting</p>
+              <p class="timeline__role"><span lang="it">Microcredito e finanza agevolata · Torino e da remoto</span><span lang="en">Microcredit &amp; public funding support · Turin and remote</span></p>
+            </li>
+            <li>
+              <p class="timeline__when"><span lang="it">In corso</span><span lang="en">Ongoing</span></p>
+              <p class="timeline__org">Politecnico di Torino</p>
+              <p class="timeline__role"><span lang="it">Corso di laurea in Sustainable Design for the Food System</span><span lang="en">Degree candidate, Sustainable Design for the Food System</span></p>
+            </li>
+          </ol>
+
+          <h3 class="side-title"><span lang="it">Strumenti</span><span lang="en">Tools</span></h3>
+          <p class="plain-list"><span lang="it">Make.com, Airtable, Shopify Admin GraphQL, API REST e GraphQL, webhook, Google Cloud Run, Cloudinary, Git e GitHub.</span><span lang="en">Make.com, Airtable, Shopify Admin GraphQL, REST and GraphQL APIs, webhooks, Google Cloud Run, Cloudinary, Git and GitHub.</span></p>
+
+          <h3 class="side-title"><span lang="it">Lingue</span><span lang="en">Languages</span></h3>
+          <p class="plain-list"><span lang="it">Italiano (madrelingua), inglese (C1).</span><span lang="en">Italian (native), English (C1).</span></p>
+        </div>
+      </div>
+    </section>
+
+    <!-- Contatti -->
+    <section class="contact" id="contatti" aria-labelledby="contatti-title">
+      <div class="wrap contact__grid">
+        <p class="section__label"><span lang="it">Contatti</span><span lang="en">Contact</span></p>
+        <div class="contact__body">
+        <h2 class="contact__title" id="contatti-title">
+          <span lang="it">Per lavoro o collaborazioni, scrivimi.</span>
+          <span lang="en">For work or collaborations, email me.</span>
+        </h2>
+        <p class="contact__email"><a href="mailto:osiforaul2003@gmail.com">osiforaul2003@gmail.com</a></p>
+        <p class="contact__note"><span lang="it">Rispondo in italiano e in inglese.</span><span lang="en">I reply in English and Italian.</span></p>
+        <ul class="contact__links">
+          <li><a href="https://github.com/Geekeronline" rel="noopener">GitHub</a></li>
+          <li><a rel="noopener"
+                 href="https://github.com/Geekeronline/spirit-ink-case-study/tree/italian"
+                 data-href-it="https://github.com/Geekeronline/spirit-ink-case-study/tree/italian"
+                 data-href-en="https://github.com/Geekeronline/spirit-ink-case-study"><span lang="it">Case study Spirit Ink</span><span lang="en">Spirit Ink case study</span></a></li>
+        </ul>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="footer">
+    <div class="wrap">
+      <div class="footer__inner">
+        <p>© 2026 Raul Osifo · <span lang="it">Torino</span><span lang="en">Turin</span></p>
+        <p><span lang="it">Aggiornato a settembre 2026</span><span lang="en">Updated September 2026</span></p>
+      </div>
+    </div>
+  </footer>
+
+  <script src="main.js" defer></script>
+</body>
+</html>
