@@ -10,14 +10,7 @@ These identify the tested build. The moving `19.0` branch and Docker tag may cha
 
 ## Why I used inventory_quantity_auto_apply
 
-The Python script resolves one existing `stock.quant` for an exact product and location. It then makes one public RPC call:
-
-```python
-stock.quant.write(
-    [[quant_id], {'inventory_quantity_auto_apply': target}],
-    context={'inventory_mode': True, 'allowed_company_ids': [company_id]}
-)
-```
+The script resolves one existing `stock.quant` for an exact product and location. Through XML-RPC `execute_kw`, it calls the public `stock.quant.write` method, setting `inventory_quantity_auto_apply` to the **absolute target**. The context enables `inventory_mode` and restricts the selected company.
 
 In Odoo 19, the inverse `_set_inventory_quantity` handles that field and invokes the standard inventory-adjustment logic. Odoo creates the stock movements. The script **never writes directly to `stock.quant.quantity`** and does not call private methods over RPC.
 
