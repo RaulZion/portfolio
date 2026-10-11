@@ -1,23 +1,46 @@
-# Odoo 19 verification — 2026-10-11
+# Odoo 19 checks behind the XML-RPC demo
 
-Verified before live inventory writes. Official image odoo:19.0, digest odoo@sha256:dd9013e669caaa23d26765dc55814655eaeecca7cfc2c265dbabae913bce22fd. Installed stock_quant.py SHA-256: 6d894fea409598074a04d8ca805d7d4f974b5b34357e0ce915ec58d492a19362. The installed inverse and action implementation were inspected directly inside the local image, as well as the official 19.0 branch. Image and branch can change; this digest identifies the tested build.
+**Checked on 11 October 2026.** The write method was inspected in the official Odoo 19 source and in the installed `odoo:19.0` Docker image before the live test.
 
-## Official references and decisions
+- Odoo image digest: `odoo@sha256:dd9013e669caaa23d26765dc55814655eaeecca7cfc2c265dbabae913bce22fd`
+- Installed `stock_quant.py` SHA-256: `6d894fea409598074a04d8ca805d7d4f974b5b34357e0ce915ec58d492a19362`
+- Live Odoo server version: `19.0-20260926`
 
-- [External RPC API](https://www.odoo.com/documentation/19.0/developer/reference/external_rpc_api.html): version(), authenticate(), execute_kw(), search_read(), read() and write(). Online External API requires Custom; excludes One App Free/Standard. Current removal notice: Odoo 22 (fall 2028), Online 21.1 (winter 2027). The official page was retrieved through a text proxy after direct retrieval timed out. XML-RPC was retained to meet the assignment.
-- [stock_quant.py, official 19.0](https://github.com/odoo/odoo/blob/19.0/addons/stock/models/stock_quant.py): quantity and reserved_quantity describe on-hand and reserved units. inventory_quantity stores a count; inventory_quantity_set and is_outdated identify pending/conflicting counts. inventory_quantity_auto_apply has inverse _set_inventory_quantity. In inventory_mode with stock.group_stock_user, the inverse sets the count and calls action_apply_inventory. That action returns a conflict wizard for outdated counts; otherwise _apply_inventory creates normal stock moves and clears the pending-count flag. The migration rejects reservations, pending/outdated counts and dimensional quants before and after applying.
-- [RPC controller](https://github.com/odoo/odoo/blob/19.0/addons/rpc/controllers/xmlrpc.py): _xmlrpc dispatches the method, then serializes the result. The marshaller uses allow_none=False.
-- [Model RPC transaction service](https://github.com/odoo/odoo/blob/19.0/odoo/service/model.py): retrying commits the transaction before returning its result to the controller. action_apply_inventory's normal branch has an implicit None return, which can cause a serialization fault after committed inventory. Inference from these two official sources: an RPC fault alone is not proof of rollback. No failed write is blindly retried.
-- [Official Docker entrypoint](https://github.com/odoo/docker/blob/master/19.0/entrypoint.sh): supplies database host/user/password and runs the public Odoo CLI. The prior container's dfvd command explained exit code 127; the preserved container and its volumes were reused for corrected startup.
+These identify the tested build. The moving `19.0` branch and Docker tag may change.
 
-Chosen RPC: stock.quant.write([[quant_id], {inventory_quantity_auto_apply: integer_target}], context={inventory_mode: true, allowed_company_ids: [company]}). Public write returns an XML-RPC-compatible boolean. Its inverse uses the verified inventory adjustment mechanism in one Odoo transaction. No private method is remotely called, no direct stock SQL is used, and quantity is never directly written. A true result still does not replace readback: a conflict wizard could leave a pending adjustment. Fresh exact lookup, identity comparison and guard checks are required for SUCCESS.
+## Why I used inventory_quantity_auto_apply
 
-## Fields and scope verified
+The Python script resolves one existing `stock.quant` for an exact product and location. It then makes one public RPC call:
 
-Exact product.product.default_code matching; SKU is not presumed unique. Live fields_get and fixture creation check is_storable, tracking, uom_id, company_id and active. Exact stock.location.complete_name plus active/internal/same-company checks. Quant matching uses exact product/location and rejects multiple records, lot/package/owner dimensions, reservations and pending adjustments. Unit rounding must divide one whole unit. A missing quant is rejected by migration; setup creation is explicitly separate.
+```python
+stock.quant.write(
+    [[quant_id], {'inventory_quantity_auto_apply': target}],
+    context={'inventory_mode': True, 'allowed_company_ids': [company_id]}
+)
+```
 
-## Evidence boundaries
+In Odoo 19, the inverse `_set_inventory_quantity` handles that field and invokes the standard inventory-adjustment logic. Odoo creates the stock movements. The script **never writes directly to `stock.quant.quantity`** and does not call private methods over RPC.
 
-Read live_demo_evidence.txt for the actual server version, authentication UID, IDs, quantities, move counts and run results. Timeout/RPC-loss and crash windows are automated simulations, not fabricated live network failures. The Free tier native import findings are the user's reported manual Online validations; no agent writes were sent there. Concurrent warehouse changes are not atomically excluded by XML-RPC plus a local ledger: require a controlled migration window. This is a tested local prototype, not a production deployment.
+`write` returns a boolean that XML-RPC can serialize. I avoided using `action_apply_inventory` directly because its normal path may return `None`. The [XML-RPC controller](https://github.com/odoo/odoo/blob/19.0/addons/rpc/controllers/xmlrpc.py) serializes replies with `allow_none=False`, while the [model RPC service](https://github.com/odoo/odoo/blob/19.0/odoo/service/model.py) can commit before serialization. The practical risk is a client error after the stock change has already been committed. That is why the script does not blindly retry a failed response.
 
-Additional installed-source check: [res_users.py](https://github.com/odoo/odoo/blob/19.0/odoo/addons/base/models/res_users.py) defines has_group on a user recordset, requiring [[uid], group_external_id] in execute_kw. The adapter checks membership for the authenticated user explicitly; a regression test and live authentication verify this contract.
+Even a successful `write` response is not enough: the script resolves the quant again and checks the **actual stock against the saved target**. Pending or outdated inventory counts are not treated as success.
+
+## What the script checks
+
+- `product.product.default_code` and `stock.location.complete_name` must match exactly. Zero or multiple matches are errors.
+- The product must be active, storable, untracked and compatible with whole units. The location must be active, internal and in the selected company.
+- The user must have `stock.group_stock_user` access; the local account is restricted to one company. The authenticated user's `has_group` call was checked against [res_users.py](https://github.com/odoo/odoo/blob/19.0/odoo/addons/base/models/res_users.py).
+- The quant must already exist and be unique. Reservations, pending/outdated counts, lot/serial, package and owner dimensions are rejected.
+- Before applying a count, the target and stock identity are stored in a local ledger. Changes or uncertain RPC outcomes require reconciliation; there is no automatic write retry.
+
+The code is intentionally restricted to `http://localhost` or `http://127.0.0.1` and database `revolv_test`. That restriction prevents this assignment demo from writing to Odoo Online.
+
+## Sources and evidence
+
+- [Odoo 19 External RPC API](https://www.odoo.com/documentation/19.0/developer/reference/external_rpc_api.html): `version`, `authenticate`, `execute_kw` and the public ORM methods. Odoo Online's External API is unavailable on One App Free and Standard; Custom is required. XML-RPC is deprecated. The removal notice checked at the time of testing points to Odoo 22 / Online 21.1.
+- [`stock_quant.py` in Odoo 19](https://github.com/odoo/odoo/blob/19.0/addons/stock/models/stock_quant.py): fields, the inventory inverse, conflict handling and stock-move application.
+- [Odoo Docker entrypoint](https://github.com/odoo/docker/blob/master/19.0/entrypoint.sh): the local startup and database options.
+
+The [live demo record](evidence/live_demo_evidence.txt) contains the server version, authenticated UID, product and location IDs, before/after quantities and movement counts. The first run went **10 → 15**; the same input with its ledger added no second movement. Four invalid rows were isolated from a valid row, and stock changed to 16 returned `CONFLICT` without a migration write.
+
+Timeouts, lost RPC responses, crashes and failed readback are **automated simulations**, not live network failures. The One App Free import findings were observed manually in Odoo's web interface. Neither set of evidence proves safe operation during concurrent warehouse activity: an agreed migration window and production access review would still be required.
