@@ -1,52 +1,73 @@
-# Revolv Space - Odoo inventory migration (assignment evidence)
+# Revolv Space - Odoo inventory migration
 
-**Author:** Raul Osifo  
-**Scope:** one-off inventory reconciliation; no production deployment.
+Raul Osifo · AI Operations Intern technical assignment · October 2026
 
-This project documents two different, tested approaches. They are **not interchangeable**.
+The assignment asked for a cost-free migration on Odoo Online and a Python integration using XML-RPC. Those requirements need different environments: **One App Free does not offer the External API**. I tested the native import on Odoo Online Free and the Python integration on a local Odoo Community 19 database. Neither test is presented as a production rollout.
 
-## Task 1 - Odoo Online One App Free
+| | Task 1: Free-tier migration | Task 2: XML-RPC integration |
+|---|---|---|
+| Environment | Odoo Online One App Free | Odoo Community 19 in Docker |
+| Approach | Standard inventory export/import | Python CLI calling XML-RPC |
+| Verified | Manual stock adjustments and import behavior | Live write, readback, safe same-batch rerun |
+| Not included | An automatic CSV-to-import generator | Connection or writes to Odoo Online Free |
 
-This task is a **manual, native-import procedure**, not an additional Python application. The Free plan does not include Odoo's External API. For an approved one-off migration, compare each source CSV delta (`material_sku`, `quantity_change`, `location`) against a fresh Odoo product/stock export. Agree a cut-off and exclude arrivals already recorded in Odoo. Calculate an **absolute target = on-hand + delta** for each unambiguous SKU and location. Use the native import's **Test**, inspect Counted and Difference, obtain approval, **Apply**, then export inventory again to reconcile the result. Pause other stock changes during this operation.
+## Task 1 - the approach that works on Free
 
-The manual trials on Odoo Online showed two required import formats:
+A one-off migration can use the tools already available in Inventory:
 
-- **Existing stock row:** its exported External ID and integer `inventory_quantity` target.
-- **First arrival with no stock row:** official Inventory Adjustment import template, Product / Location / Counted Quantity. Do not use this format to update existing stock: a trial created a second pending inventory row instead.
+1. Agree a cut-off with Procurement and exclude arrivals already recorded in Odoo.
+2. Export products and current stock. For each approved CSV change, check the exact SKU and location, then calculate **Counted = On Hand + quantity_change**.
+3. Prepare the appropriate import file, using integer quantities:
+   - **Existing stock:** Odoo's exported External ID and the absolute `inventory_quantity`.
+   - **First arrival without a stock row:** Odoo's Inventory Adjustment template (Product, Location, Counted Quantity).
+4. Use Odoo's **Test** function. Check the resulting **Difference** before approving **Apply**.
+5. Re-export the stock and compare it with the approved targets. Keep the source file and the before/after exports.
 
-An Italian-localized import interpreted `15.0` as `150`; only **integer text** is used in this exercise. Lot/serial-tracked stock is out of scope. Future receipts belong to normal Odoo receipt workflows. See [`operations_guide_free_tier.md`](operations_guide_free_tier.md). These are human-performed Online UI tests, not XML-RPC tests.
+These were manual UI tests, not output from a second Python script. Two details changed the design: in the Italian locale, `15.0` was interpreted as `150`; and using the first-arrival template on an existing stock record created another pending inventory row. The two import formats must stay separate.
 
-## Task 2 - Python / XML-RPC on local Odoo Community 19
+This path avoids custom modules, Odoo Studio and external API access. It does still require human checks. A sensible next step would be to generate the two import files offline; that generator is **not** part of this submission. The short warehouse procedure is in [operations_guide_free_tier.md](operations_guide_free_tier.md).
 
-`migrate_inventory.py` is a locally verified XML-RPC prototype. It cannot connect to Odoo Online One App Free. The script intentionally accepts only `http://localhost` or `http://127.0.0.1` and database `revolv_test` so the assignment demo cannot accidentally write to a cloud database.
+## Task 2 - the Python/XML-RPC demonstration
 
-**Data path:** input CSV -> per-row validation -> exact product/location/quant resolution -> read baseline -> durable absolute target -> guarded inventory adjustment -> readback -> `sync_report.csv`.
+The script takes `material_sku,quantity_change,location`. It checks each row, finds one exact product, location and stock record, reads the current quantity, and saves an **absolute target** before attempting a stock write. It then reads the quantity again and writes a row-level result to `sync_report.csv`.
 
-Use an installed Odoo 19 Community test instance with Inventory, a single-company account, an existing untracked/unreserved product `SADA-001` at `WH/Stock` with 10 units, and Python 3.14 (standard library only). `setup_local.ps1` and `setup_product.py` are optional lab helpers. The saved report records the original live run; do **not** delete the operational ledger to reproduce it.
+**Live result on Odoo 19.0-20260926:** `SADA-001` at `WH/Stock` went from **10 to 15** using delta **+5**. Re-running the same input with the same ledger returned `ALREADY_APPLIED`: stock stayed at 15 and no new stock movement was created. In a mixed batch, four bad rows were reported without stopping a separate valid row. When stock was deliberately changed to 16, the script returned `CONFLICT` without writing.
+
+The write uses Odoo's `stock.quant.write` with `inventory_quantity_auto_apply` in inventory mode. I checked this against the [Odoo 19 source](odoo_verification.md) and the installed Docker image. The script does not write directly to the `quantity` field.
+
+### Running the local demo
+
+Requirements: Python 3.14, an Odoo **Community 19** test database called `revolv_test`, Inventory installed and a single-company test user. The test fixture is an existing, untracked and unreserved stock record. On Windows, `setup_local.ps1` can create or reuse the Docker lab; it preserves existing stock and ledgers.
+
+Run these commands from this folder:
 
 ```powershell
 py -3.14 -m unittest -q
-$env:ODOO_URL='http://127.0.0.1:8069'
-$env:ODOO_DB='revolv_test'
-$env:ODOO_USER='admin'
-py -3.14 migrate_inventory.py             # dry run
-py -3.14 migrate_inventory.py --apply     # explicit stock write
-py -3.14 migrate_inventory.py --apply     # same input + ledger; already applied
+$env:ODOO_URL = 'http://127.0.0.1:8069'
+$env:ODOO_DB = 'revolv_test'
+$env:ODOO_USER = 'admin'
+py -3.14 migrate_inventory.py          # stock dry run; saves a local plan
+py -3.14 migrate_inventory.py --apply  # write only after review
 ```
 
-Set `ODOO_PASSWORD` privately or enter the locally prompted password. Optional flags: `--input`, `--ledger`, `--report`. Input headers must be exactly `material_sku,quantity_change,location`. Each row produces baseline, delta, target, verified actual, status and explanation in `sync_report.csv`. The default is a read-only stock **dry run**, although it saves a local planned ledger.
+The CLI prompts for the local password unless `ODOO_PASSWORD` is set privately. Optional flags are `--input`, `--ledger` and `--report`. **Do not reset the supplied ledger to try to reproduce the original first run.** The default rerun correctly reports `ALREADY_APPLIED`.
 
-**Safety:** only existing, untracked, unreserved, unique stock quants and whole units; no negative target. No direct write to `stock.quant.quantity`. An atomic CSV ledger stores the fixed target, record identity, input hash and local database identity. The script records `ATTEMPTING` before RPC and never blindly retries an uncertain write. It verifies the resulting stock after a write. A loss of response, changed stock, pending inventory adjustment, or other uncertainty requires review. A separate migration window is mandatory: no distributed transaction or production *exactly-once* guarantee exists.
+The report distinguishes `SUCCESS` (stock verified), `ALREADY_APPLIED` (no new write), `ERROR` (row skipped) and `CONFLICT` / `REVIEW` (stop and reconcile). Failed rows do not automatically cancel unrelated valid rows.
 
-**Important correction procedure:** a changed input file is **not** compatible with the original ledger. Do not create a fresh ledger containing previously successful rows: that can apply the same delta again. Compare `sync_report.csv` with a fresh Odoo stock export; put **only confirmed unapplied rows** into a new, separately approved batch. A timed-out or uncertain row is not confirmed unapplied; reconcile it manually before considering a new batch. Never discard an existing ledger to bypass `REVIEW` or `CONFLICT`.
+### What prevents a second delta?
 
-**Fatal errors:** invalid input header, malformed quoting/encoding, incompatible ledger, or disk/lock failure stop the batch before an unsafe write. The CLI now prints the specific safe diagnostic. Non-fatal invalid rows yield `ERROR` and do not stop other rows. Exit codes: 0=accepted/reconciled, 1=row errors/review/conflicts, 2=fatal. Error statuses are **not** proof that all other rows failed.
+For the **same input and ledger**, the script stores the baseline, delta, fixed target, stock identity and write state. It records `ATTEMPTING` before making the RPC call. If a response is lost, it checks Odoo again instead of sending another +5. An uncertain outcome is left for review.
 
-### Verification and provenance
+**This is not a global exactly-once guarantee.** If someone starts a new ledger containing changes that have already been applied, the delta can be applied again. Never replace a ledger to clear an error. Compare the report with a fresh stock export; create a separately approved batch containing **only rows confirmed not applied**. A timeout or uncertain result is not proof that a row was skipped.
 
-- Agent-observed **local Odoo 19.0-20260926**: baseline 10, delta +5, `SUCCESS` actual 15; identical run `ALREADY_APPLIED` actual 15 with **zero additional stock moves**; four invalid rows rejected while a valid second row succeeded; changed stock 16 yielded `CONFLICT` with no migration write. See [`evidence/live_demo_evidence.txt`](evidence/live_demo_evidence.txt) and CSV reports.
-- 51 automated tests pass in an independent Linux/Python rerun; timeout, response loss and process-interruption cases are **simulated**, not live network failures. Run: `python -m unittest -q`.
-- `actual_user_prompt.txt` is the exact Codex **user** prompt. No custom user-authored system prompt was supplied; platform instructions are not reproduced. See `ai_provenance.md`.
-- Version-specific behavior and documentation: `odoo_verification.md`. Odoo officially limits External API access to Custom plans; XML-RPC is deprecated and scheduled for removal in a later version.
+This local prototype deliberately allows only loopback HTTP and database `revolv_test`. It covers whole units, one company, existing plain quants, and no reservations or lot/serial tracking. It requires a controlled stock-change window. Production access controls, concurrency and first-arrival API handling remain out of scope.
 
-**Do not interpret a local demonstration as a production deployment.** Access permissions, record rules, lot/serial handling, concurrent stock writes and migration data ownership would need separate review.
+## Code, prompts and evidence
+
+- [`migrate_inventory.py`](migrate_inventory.py) - standard-library CLI.
+- [`test_migrate_inventory.py`](test_migrate_inventory.py) - 51 automated tests; timeout, lost-response and interruption cases are simulated.
+- [`evidence/live_demo_evidence.txt`](evidence/live_demo_evidence.txt) - recorded live version, stock quantities and movement counts; the matching CSV reports are in [evidence/](evidence/).
+- [`actual_user_prompt.txt`](actual_user_prompt.txt) - unedited prompt given to Codex. No custom system prompt was supplied; see [AI provenance](ai_provenance.md).
+- [`odoo_verification.md`](odoo_verification.md) - official Odoo source references and the reason for the chosen write method.
+
+The Online Free import tests were performed manually. The local XML-RPC writes were run by Codex against the test database and saved in the evidence files. Neither set of results establishes that this script is ready for use against a live warehouse.
