@@ -1,0 +1,45 @@
+UTC: 2026-10-11T12:04:03.227723+00:00
+Python: 3.14.3 (main, Mar 24 2026, 22:56:56) [MSC v.1944 64 bit (AMD64)]
+TARGET: http://127.0.0.1:8069 / revolv_test / LOCAL Community only
+ODOO VERSION: {"protocol_version": 1, "server_serie": "19.0", "server_version": "19.0-20260926", "server_version_info": [19, 0, 0, "final", 0, ""]}
+AUTH UID: 2
+INVENTORY MODULE: [{"id": 549, "latest_version": "19.0.1.1", "name": "stock", "state": "installed"}]
+PRODUCT: [{"default_code": "SADA-001", "id": 1, "is_storable": true, "name": "SADA Test Component A", "tracking": "none", "uom_id": [1, "Units"]}]
+LOCATION: [{"company_id": [1, "My Company"], "complete_name": "WH/Stock", "id": 5, "usage": "internal"}]
+PRE: {"actual": 10, "company_id": 1, "location_id": 5, "product_id": 1, "quant_id": 1}
+PRE DONE MOVE COUNT: 1
+LIVE VERIFIED QUANT FIELDS: {"inventory_quantity": {"readonly": false, "type": "float"}, "inventory_quantity_auto_apply": {"readonly": false, "type": "float"}, "inventory_quantity_set": {"readonly": false, "type": "boolean"}, "is_outdated": {"readonly": true, "type": "boolean"}, "quantity": {"readonly": true, "type": "float"}}
+LIVE CLI dry_run_report.csv: {"exit": 0, "stdout": "Odoo 19.0-20260926 authenticated UID 2\n2 SADA-001 DRY_RUN actual=10"}
+LIVE REPORT dry_run_report.csv: [{"actual": "10", "baseline": "10", "delta": "5", "location": "WH/Stock", "material_sku": "SADA-001", "message": "Plan saved; stock unchanged", "row_number": "2", "status": "DRY_RUN", "target": "15"}]
+DRY RUN DONE MOVE COUNT: 1
+LIVE CLI first_run_report.csv: {"exit": 0, "stdout": "Odoo 19.0-20260926 authenticated UID 2\n2 SADA-001 SUCCESS actual=15"}
+LIVE REPORT first_run_report.csv: [{"actual": "15", "baseline": "10", "delta": "5", "location": "WH/Stock", "material_sku": "SADA-001", "message": "Target verified by fresh read", "row_number": "2", "status": "SUCCESS", "target": "15"}]
+FIRST RUN DONE MOVE COUNT: 2
+LIVE CLI rerun_report.csv: {"exit": 0, "stdout": "Odoo 19.0-20260926 authenticated UID 2\n2 SADA-001 ALREADY_APPLIED actual=15"}
+LIVE REPORT rerun_report.csv: [{"actual": "15", "baseline": "10", "delta": "5", "location": "WH/Stock", "material_sku": "SADA-001", "message": "Target verified; no stock write", "row_number": "2", "status": "ALREADY_APPLIED", "target": "15"}]
+RERUN DONE MOVE COUNT: 2
+RERUN ADDED MOVES: 0
+LEDGER UNCHANGED ON RERUN: true
+LIVE CLI negative_report.csv: {"exit": 1, "stdout": "Odoo 19.0-20260926 authenticated UID 2\n2 SADA-001 ERROR actual=\n3 UNKNOWN ERROR actual=\n4 SADA-001 ERROR actual=\n5 BROKEN ERROR actual=\n6 SADA-002 SUCCESS actual=10"}
+LIVE REPORT negative_report.csv: [{"actual": "", "baseline": "", "delta": "", "location": "WH/Stock", "material_sku": "SADA-001", "message": "Delta must be integer text, such as 5 or -3", "row_number": "2", "status": "ERROR", "target": ""}, {"actual": "", "baseline": "", "delta": "5", "location": "WH/Stock", "material_sku": "UNKNOWN", "message": "SKU is unknown or ambiguous", "row_number": "3", "status": "ERROR", "target": ""}, {"actual": "", "baseline": "", "delta": "5", "location": "UNKNOWN", "material_sku": "SADA-001", "message": "Location is unknown or ambiguous", "row_number": "4", "status": "ERROR", "target": ""}, {"actual": "", "baseline": "", "delta": "", "location": "WH/Stock", "material_sku": "BROKEN", "message": "Malformed row or duplicate SKU/location pair", "row_number": "5", "status": "ERROR", "target": ""}, {"actual": "10", "baseline": "8", "delta": "2", "location": "WH/Stock", "material_sku": "SADA-002", "message": "Target verified by fresh read", "row_number": "6", "status": "SUCCESS", "target": "10"}]
+LIVE NEGATIVE CASES: Bad integer, unknown SKU, unknown location, wrong column count rejected; independent valid row 8+2=10 succeeded.
+LIVE CLI conflict_report.csv: {"exit": 1, "stdout": "Odoo 19.0-20260926 authenticated UID 2\n2 SADA-001 CONFLICT actual=16"}
+LIVE REPORT conflict_report.csv: [{"actual": "16", "baseline": "10", "delta": "5", "location": "WH/Stock", "material_sku": "SADA-001", "message": "Stock changed outside this migration; no write", "row_number": "2", "status": "CONFLICT", "target": "15"}]
+LIVE CONFLICT ADDED MOVES: 0
+LIVE CONFLICT: Separate local adjustment set 16; migration refused to overwrite it.
+TEST CLEANUP: Separate local adjustment restored 15; these two test adjustments are not migration writes.
+LIVE CLI final_rerun_report.csv: {"exit": 0, "stdout": "Odoo 19.0-20260926 authenticated UID 2\n2 SADA-001 ALREADY_APPLIED actual=15"}
+LIVE REPORT final_rerun_report.csv: [{"actual": "15", "baseline": "10", "delta": "5", "location": "WH/Stock", "material_sku": "SADA-001", "message": "Target verified; no stock write", "row_number": "2", "status": "ALREADY_APPLIED", "target": "15"}]
+FINAL: {"actual": 15, "company_id": 1, "location_id": 5, "product_id": 1, "quant_id": 1}
+FINAL DONE MOVE COUNT: 4
+HARNESS NOTE: The tool process reached its 50-second limit after the final live read. Final automated tests and confirmation were run separately below.
+AUTOMATED TEST / SIMULATED FAILURE: 50 tests, OK, Python 3.14.3, exit 0. Full output: automated_test_results.txt.
+SIMULATED ONLY: Timeout before/after commit, RPC fault, unavailable readback, pending adjustment, verification mismatch, interruption and restart. These are automated simulations, not live network faults.
+FINAL INDEPENDENT LIVE CONFIRMATION: SADA-001 / WH/Stock actual=15, product_id=1, location_id=5, quant_id=1, UID=2.
+BROWSER ACTIONS REMAINING: None.
+COMPLETE: Live first run, safe rerun, negative-row isolation and conflict refusal verified.
+FINAL RUNTIME AUDIT (after report-readback fix): Odoo 19.0-20260926 authenticated UID 2
+2 SADA-001 ALREADY_APPLIED actual=15
+FINAL AUDIT: actual= 15 added_moves= 0 ledger_unchanged=True
+AUTOMATED FINAL SUITE: 51 tests passed, Python 3.14.3. Existing Task 1 suite: 73 tests passed.
+SETUP REUSE AUDIT: exit 0; fixture actual=15, no reset, existing ledger retained.

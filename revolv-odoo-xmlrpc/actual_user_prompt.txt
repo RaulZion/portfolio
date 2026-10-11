@@ -1,0 +1,419 @@
+You are completing the technical implementation for my Revolv Space AI Operations Intern assignment.
+
+Your job is to finish the Odoo/XML-RPC part end-to-end, not just write sample code.
+
+IMPORTANT WORKING STYLE
+- Work autonomously.
+- Use terminal/shell/computer tools yourself whenever possible.
+- Do not give me individual commands to run one at a time.
+- Do not stop after each successful step.
+- Inspect the current machine state first and continue from it.
+- Only ask me to intervene if a browser-only Odoo action, credential entry, CAPTCHA, or other genuinely human-only step is unavoidable.
+- If human browser interaction is required, batch ALL required browser actions into one short checklist, wait for me once, then continue autonomously.
+- Do not destroy working containers/data unless necessary.
+- Do not touch my real Odoo Online database for writes. All XML-RPC write testing must happen on the local Odoo Community test instance.
+
+GOAL
+
+Produce a real, reproducible demonstration of:
+
+CSV
+→ Python
+→ Odoo XML-RPC
+→ real inventory write in Odoo Community 19
+→ read-back verification
+→ safe rerun without applying the same delta twice.
+
+This is required because the assignment explicitly expects a Python integration using Odoo Web API / XML-RPC. Mock-only testing is not sufficient.
+
+CURRENT STATE
+
+Windows machine.
+
+Docker Desktop is installed and working.
+
+This has already succeeded:
+    docker run hello-world
+
+Current Docker state previously observed:
+- container `revolv-db`
+- image `postgres:15`
+- status: running
+- POSTGRES_USER=odoo
+- POSTGRES_PASSWORD=odoo
+- POSTGRES_DB=postgres
+
+`revolv-odoo` had not yet been created when last checked.
+
+Do not assume this state is unchanged. Inspect it first with Docker commands.
+
+TARGET LOCAL ENVIRONMENT
+
+Use:
+- Odoo Community 19
+- PostgreSQL
+- local URL preferably http://localhost:8069
+- database name: revolv_test
+- test admin credentials may be simple local-only credentials
+- Inventory / stock module installed
+
+Use the official Odoo 19 Docker image unless there is a concrete reason not to.
+
+Before making implementation decisions, verify behavior against OFFICIAL Odoo 19 documentation and, where required, the official `odoo/odoo` 19.0 source.
+
+Relevant documented facts:
+- XML-RPC `/xmlrpc/2/common` and `/xmlrpc/2/object` exist in Odoo 19.
+- XML-RPC is deprecated but remains available in Odoo 19.
+- Odoo Online One App Free / Standard do not include External API access.
+- Therefore the production/free-tier migration path and the XML-RPC prototype are intentionally validated in different environments.
+- The local Community instance is only for proving Task 2 end-to-end.
+
+Do not silently switch the implementation to JSON-2. The assignment asks for Web API/XML-RPC and we need an XML-RPC demonstration.
+
+TEST DATA
+
+Create/use:
+
+Product:
+- name: SADA Test Component A
+- internal reference/default_code: SADA-001
+- storable / inventory-tracked product
+- no lot or serial tracking
+
+Location:
+- WH/Stock
+
+Initial on-hand quantity:
+- 10
+
+Migration input:
+
+material_sku,quantity_change,location
+SADA-001,5,WH/Stock
+
+Expected result:
+baseline = 10
+delta = +5
+target = 15
+verified actual quantity = 15
+
+Then run THE SAME migration again.
+
+Expected second-run result:
+- quantity must remain 15
+- the +5 delta must NOT be applied again
+- result should clearly report something equivalent to ALREADY_APPLIED / DONE / SKIPPED_IDEMPOTENT
+
+IMPLEMENTATION REQUIREMENTS
+
+Build a small Python solution that I can explain line by line.
+
+Prefer standard library only unless a dependency is genuinely justified.
+
+The script must:
+
+1. Read an input CSV containing:
+   - material_sku
+   - quantity_change
+   - location
+
+2. Validate every row independently.
+
+3. Reject or report, without crashing the whole run:
+   - missing SKU
+   - malformed CSV rows
+   - non-integer quantities
+   - blank location
+   - ambiguous SKU
+   - unknown SKU
+   - ambiguous location
+   - unknown location
+   - tracked/serial/lot product if the chosen logic cannot safely support it
+   - timeout/network/RPC error
+
+4. Do exact matching for SKU and location.
+   Do not silently choose the first partial match.
+
+5. Read the current quantity from Odoo through XML-RPC.
+
+6. Interpret `quantity_change` as a DELTA, not as the final absolute stock.
+
+7. Calculate:
+   target = baseline + delta
+
+8. Update the stock using a method that is correct for Odoo 19 inventory adjustments.
+
+Before finalizing the write mechanism:
+- inspect official Odoo 19 source for `stock.quant`
+- understand `inventory_quantity`, `inventory_quantity_auto_apply`, inventory mode, and `action_apply_inventory`
+- explicitly account for any XML-RPC serialization/transaction behavior of the chosen method
+- avoid a design where a server response error can cause us to blindly retry an already-committed stock change
+
+Do not invent Odoo behavior.
+
+9. Read the resulting quantity back from Odoo and verify:
+   actual == target
+
+10. Produce a clear per-row report:
+   SKU
+   location
+   baseline
+   delta
+   target
+   actual
+   status
+   error/message
+
+IDEMPOTENCY / DOUBLE-DELTA SAFETY
+
+This is essential.
+
+The same migration input must not apply the delta twice.
+
+Implement a simple persistent migration ledger suitable for a one-off migration.
+
+Keep it simple, for example:
+- batch/migration identifier
+- SKU
+- location
+- baseline
+- delta
+- target
+- status
+
+On rerun, reconcile the ledger against the quantity currently read from Odoo.
+
+A good state machine is:
+
+- current == target
+    → DONE / ALREADY_APPLIED
+    → never apply the delta again
+
+- current == baseline and no completed write is recorded
+    → safe candidate to apply
+
+- current is neither baseline nor target
+    → CHECK / CONFLICT
+    → do not write automatically
+
+Do not rely only on “the script remembers it ran”.
+Always reconcile with Odoo state.
+
+Make ledger writes atomic enough for this prototype:
+- write temporary file
+- replace final ledger file
+
+A failure affecting one row must not abort unrelated rows.
+
+TIMEOUTS
+
+Python `xmlrpc.client` does not provide a convenient per-call timeout by default.
+
+Implement a small timeout transport or another simple defensible solution.
+
+Do not add large third-party frameworks just for this.
+
+LIVE DEMONSTRATION
+
+Actually run the integration against the local Odoo 19 instance.
+
+I need evidence, not only passing unit tests.
+
+Capture/log at least:
+
+1. Odoo server version returned through XML-RPC.
+
+2. Successful authentication:
+   - UID, but never print a secret/password.
+
+3. Lookup of:
+   - SADA-001
+   - WH/Stock
+
+4. PRE state:
+   quantity = 10
+
+5. First migration:
+   baseline = 10
+   delta = 5
+   target = 15
+   actual = 15
+   status = SUCCESS
+
+6. Second execution with identical input:
+   actual = 15
+   no second +5 write
+   status = ALREADY_APPLIED or equivalent
+
+7. At least these negative cases:
+   - bad integer
+   - unknown SKU
+   - unknown location
+   - malformed CSV row
+   - simulated timeout/RPC exception
+   - state conflict showing that the script refuses to overwrite unexpected inventory
+
+For conditions that are impractical to force against live Odoo, unit-test them, but clearly distinguish:
+- LIVE TEST
+- AUTOMATED TEST / SIMULATED FAILURE
+
+ODOO SETUP
+
+Handle Docker and local configuration yourself.
+
+Inspect:
+    docker ps -a
+    docker logs
+    existing Docker networks
+before creating duplicate resources.
+
+Bring up PostgreSQL and Odoo Community 19 reliably.
+
+If feasible, initialize everything from terminal.
+
+If a browser step is substantially simpler or safer, stop only once and tell me ALL browser actions required, for example:
+- open localhost
+- create database
+- install Inventory
+- create product
+etc.
+
+Do not drip-feed browser instructions one step at a time.
+
+If Computer Use is available and appropriate, you may use it instead.
+
+Do not proceed with an XML-RPC write until you have confirmed you are targeting the LOCAL Community test database, not my Odoo Online account.
+
+TESTS
+
+Create a compact automated test suite.
+
+Test the logic that matters, not implementation trivia.
+
+Include at least:
+- valid +delta
+- valid negative delta if safe
+- bad integer
+- missing SKU
+- unknown SKU
+- duplicate SKU / ambiguity
+- unknown location
+- duplicate/ambiguous location
+- malformed CSV
+- timeout
+- per-row isolation
+- rerun idempotency
+- external state changed between runs
+- target verification mismatch
+
+Run all tests and report the exact count/pass result.
+
+Keep the solution small. Do not recreate a 600-line framework.
+
+TARGET SIZE
+
+Aim approximately for:
+- core runtime: 150–250 lines if practical
+- tests: enough to cover risks, not an artificial line target
+
+Simple and defensible is more important than hitting an exact number.
+
+FILES TO PRODUCE
+
+Create a clean folder such as:
+
+revolv_odoo_xmlrpc/
+
+with at least:
+
+- migrate_inventory.py
+- migration_input.csv
+- migration_ledger.csv
+- test_migrate_inventory.py
+- README.md
+- live_demo_evidence.txt
+
+README must contain:
+- exact command to run
+- required environment variables/config
+- architecture in a few sentences
+- assumptions
+- Free-tier limitation
+- why local Community was used
+- how idempotency works
+- known limitations
+
+Do not hard-code real secrets.
+
+Use environment variables or interactive secret input.
+
+ASSIGNMENT CONTEXT
+
+There are TWO related but deliberately separate paths.
+
+TASK 1 / FREE-TIER REALISTIC PATH
+
+Already validated manually on Odoo Online One App Free.
+
+Because External API is unavailable there, the realistic zero-cost workflow is:
+
+source delta CSV
+→ Python validation/transformation
+→ native Odoo Inventory import
+→ operator checks Difference
+→ Apply
+→ fresh export/reconciliation
+
+Important findings already established:
+
+- Existing stock records can be updated using exported Odoo external ID + Counted Quantity.
+- First-arrival items require a separate native import format using Product + Location + Counted Quantity.
+- Importing the first-arrival/template format against an existing stock item produced a second quant-like inventory row rather than updating the existing one, so the two cases must remain separate.
+- Italian locale caused `15.0` to be interpreted as 150 in one test, so the migration scope will use integer quantities and output integer text.
+- Manual first-arrival test succeeded.
+- Existing-stock import test succeeded.
+
+Do NOT replace this Task 1 design with the Community/XML-RPC solution.
+
+TASK 2 / XML-RPC PATH
+
+This local Community implementation is the proof that the Python XML-RPC integration itself actually works.
+
+The final narrative will be:
+
+“Free-tier workflow validated on Odoo Online using the native import path. XML-RPC implementation validated end-to-end on Odoo Community 19 because Odoo Online One App Free does not expose the External API.”
+
+That distinction must remain explicit.
+
+PROMPT PROVENANCE
+
+Do not claim prompts were used if they were not.
+
+This text is the actual user prompt for this Codex execution.
+
+If you were not given a separate user-controlled system prompt, say:
+“No custom system prompt was provided by the user.”
+
+Do not fabricate the hidden/platform system prompt.
+
+FINAL OUTPUT FROM YOU
+
+Do not return a tutorial.
+
+Execute the work.
+
+When finished, give me one concise completion report containing:
+
+- environment created
+- Odoo version
+- XML-RPC authentication result
+- live first-run result
+- live rerun/idempotency result
+- automated test result
+- important limitations
+- files created and their paths
+- whether any browser action remains
+
+If blocked, diagnose the blocker yourself first.
+
+Only stop for me when human input is genuinely unavoidable.

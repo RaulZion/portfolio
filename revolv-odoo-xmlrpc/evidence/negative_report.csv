@@ -1,0 +1,6 @@
+row_number,material_sku,location,baseline,delta,target,actual,status,message
+2,SADA-001,WH/Stock,,,,,ERROR,"Delta must be integer text, such as 5 or -3"
+3,UNKNOWN,WH/Stock,,5,,,ERROR,SKU is unknown or ambiguous
+4,SADA-001,UNKNOWN,,5,,,ERROR,Location is unknown or ambiguous
+5,BROKEN,WH/Stock,,,,,ERROR,Malformed row or duplicate SKU/location pair
+6,SADA-002,WH/Stock,8,2,10,10,SUCCESS,Target verified by fresh read

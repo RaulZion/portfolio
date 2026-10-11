@@ -1,0 +1,2 @@
+row_number,material_sku,location,baseline,delta,target,actual,status,message
+2,SADA-001,WH/Stock,10,5,15,16,CONFLICT,Stock changed outside this migration; no write
